@@ -1,18 +1,15 @@
 package ada.tech.agenda.visao;
 
-import ada.tech.agenda.controlador.Controlador;
 import ada.tech.agenda.utilitario.Util;
 
 import java.util.Scanner;
 
 public class Menu {
 
-    private final Agenda agenda;
     private final Scanner entrada;
 
     public Menu() {
         this.entrada = new Scanner(System.in);
-        this.agenda = new Agenda(this.entrada);
     }
 
     public void iniciar() {
@@ -21,7 +18,7 @@ public class Menu {
 
             do {
 
-                String lista = agenda.mostrarContatos();
+                String lista="";
 
                 String opcoes = STR."""
 
@@ -46,19 +43,15 @@ public class Menu {
 
                 switch (opcao){
                     case 1:
-                        agenda.criarContato();
                         break;
 
                     case 2:
-                        agenda.detalharContato();
                         break;
 
                     case 3:
-                        agenda.editarContato();
                         break;
 
                     case 4:
-                        agenda.removerContato();
                         break;
 
                     default:
