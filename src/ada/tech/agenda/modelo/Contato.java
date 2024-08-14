@@ -16,16 +16,16 @@ public class Contato {
 
     @Override
     public String toString() {
-        return STR."""
+        return """
 
                 ############################
                 ##### DADOS DO CONTATO #####
                 ############################
 
-                Nome: \{nome} \{sobreNome}
-                Telefone: \{telefone}
-                E-mail: \{email}
-                """;
+                Nome: %s %s
+                Telefone: %s
+                E-mail: %s
+                """.formatted(nome, sobreNome, telefone, email);
     }
 
     public String getNome() {

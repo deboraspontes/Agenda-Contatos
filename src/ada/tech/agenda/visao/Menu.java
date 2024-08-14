@@ -1,33 +1,46 @@
 package ada.tech.agenda.visao;
 
+import ada.tech.agenda.exception.ContatoNaoEncontradoException;
+import ada.tech.agenda.exception.NaoExisteContatoException;
+import ada.tech.agenda.exception.TelefoneExistenteException;
+import ada.tech.agenda.modelo.Contato;
 import ada.tech.agenda.utilitario.Util;
 
 import java.util.Scanner;
 
+
+
 public class Menu {
 
     private final Scanner entrada;
+    private Contato[] contatos;
+    private int nextId;
+    private int totalContatos;
 
     public Menu() {
+
         this.entrada = new Scanner(System.in);
+        this.contatos = new Contato[100];
+        this.nextId = 1;
+        this.totalContatos = 0;
     }
 
     public void iniciar() {
 
-            int opcao = 0;
+        int opcao = 0;
 
-            do {
+        do {
 
-                String lista="";
+            String lista = "";
 
-                String opcoes = STR."""
+            String opcoes = """
 
                     ##################
                     ##### AGENDA #####
                     ##################
 
                     >>>> Contatos <<<<
-                    \{lista}
+                    %s
 
                     >>>> Menu <<<<
                     1 - Adicionar Contato
@@ -36,12 +49,13 @@ public class Menu {
                     4 - Remover Contato
                     5 - Sair
 
-                    """;
+                    """.formatted(lista.toString());
 
-                Util.escrever(opcoes);
-                opcao =  Integer.parseInt(Util.ler(entrada, "Digite a opcao:"));
+            Util.escrever(opcoes);
+            opcao = Integer.parseInt(Util.ler(entrada, "Digite a opcao:"));
+            try {
 
-                switch (opcao){
+                switch (opcao) {
                     case 1:
                         break;
 
@@ -52,15 +66,50 @@ public class Menu {
                         break;
 
                     case 4:
+                        removerContato();
+                        break;
+
+                    case 5:
+                        Util.escrever("Saindo...");
                         break;
 
                     default:
                         Util.erro("Opcao invalida");
                         break;
                 }
+            } catch (TelefoneExistenteException | ContatoNaoEncontradoException | NaoExisteContatoException e) {
+                Util.erro("Erro: " + e.getMessage());
+            }
 
-            } while(opcao <= 4);
-
+        } while (opcao != 5);
     }
 
+    //Adicionar contato
+
+    //Detalhar contato
+
+    //Editar contato
+
+    // Remoção de contatos
+    private void removerContato() throws NaoExisteContatoException {
+        String telefone = Util.ler(entrada, "Digite o telefone do contato para remover:");
+        int indexToRemove = -1;
+
+        for (int i = 0; i < totalContatos -1; i++) {
+            if (contatos[i].getTelefone().equals(telefone)) {
+                indexToRemove = i;
+                break;
+            }
+        }
+
+        if (indexToRemove != -1) {
+            for (int i = indexToRemove; i < totalContatos -1; i++) {
+                contatos[i] = contatos[i + 1];
+            }
+            contatos[--totalContatos] = null;
+            Util.escrever("Contato removido!");
+        } else {
+            throw new NaoExisteContatoException("Não existe contato com o telefone fornecido" + telefone + ".");
+        }
+    }
 }
