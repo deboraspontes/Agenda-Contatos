@@ -113,6 +113,32 @@ public class Menu {
 
     // Detalhar contato
 
+
+    private void detalharContato() throws ContatoNaoEncontradoException {
+        System.out.print("Digite o telefone do contato: ");
+        String telefone = Util.ler(entrada, "Digite o telefone do contato");
+
+        Contato contato = null;
+
+        for (int i=0; i<totalContatos; i++) {
+            if (contatos[i].getTelefone().equals(telefone)){
+                contato=contatos[i];
+                break;
+            }
+        }
+        if (contato == null) {
+            Util.escrever("Nome:" + contato.getNome());
+            Util.escrever("Telefone" + contato.getTelefone());
+            Util.escrever("Email" + contato.getEmail());
+
+        } else {
+            throw new ContatoNaoEncontradoException("Contato não encontrado." + telefone);
+        }
+    }
+
+
+    //Editar contato
+  
     // Editar contato
 
     // Remoção de contatos
