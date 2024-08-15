@@ -2,12 +2,14 @@ package ada.tech.agenda.modelo;
 
 public class Contato {
 
+    private int id;
     private String nome;
     private String sobreNome;
     private String telefone;
     private String email;
 
-    public Contato(String nome, String sobreNome, String telefone, String email) {
+    public Contato(int id, String nome, String sobreNome, String telefone, String email) {
+        this.id = id;
         this.nome = nome;
         this.sobreNome = sobreNome;
         this.telefone = telefone;

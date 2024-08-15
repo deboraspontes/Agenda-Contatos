@@ -1,5 +1,8 @@
 package ada.tech.agenda.utilitario;
 
+import ada.tech.agenda.exception.TelefoneExistenteException;
+import ada.tech.agenda.modelo.Contato;
+
 import java.util.Scanner;
 
 public class Util {
@@ -17,4 +20,11 @@ public class Util {
         return entrada.nextLine();
     }
 
+    public static void contatoExiste(Contato[] contatos, String telefone) throws TelefoneExistenteException {
+        for (Contato contato : contatos) {
+            if (contato != null && contato.getTelefone().equals(telefone)) {
+                throw new TelefoneExistenteException("O telefone já está cadastrado.");
+            }
+        }
+    }
 }
