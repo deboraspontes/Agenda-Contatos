@@ -95,6 +95,7 @@ public class Menu {
                         break;
 
                     case 3:
+                        editarContato();
                         break;
 
                     case 4:
@@ -185,6 +186,43 @@ public class Menu {
 
     //Editar contato
 
+    private void editarContato() throws ContatoNaoEncontradoException, TelefoneExistenteException {
+
+        String telefone = Util.ler(entrada, "Digite o telefone do contato que deseja editar: ");
+        Contato contato = null;
+        int indexToEdit = -1;
+
+        for (int i = 0; i < this.totalContatos; i++) {
+            if (this.contatos[i].getTelefone().equals(telefone)) {
+                contato = this.contatos[i];
+                indexToEdit = i;
+                break;
+            }
+        }
+
+        if (contato == null) {
+            throw new ContatoNaoEncontradoException("Contato com telefone " + telefone + " não encontrado.");
+        }
+
+        String novoNome = Util.ler(entrada, "Digite o novo nome: ");
+        String novoTelefone = Util.ler(entrada, "\nDigite o novo telefone: ");
+
+        if (!novoNome.isBlank()) {
+            contato.setNome(novoNome);
+        }
+
+        if (!novoTelefone.isBlank() && !novoTelefone.equals(telefone)) {
+            for (int i = 0; i < this.totalContatos; i++) {
+                if (this.contatos[i].getTelefone().equals(novoTelefone)) {
+                    throw new TelefoneExistenteException();
+                }
+            }
+            contato.setTelefone(novoTelefone);
+        }
+
+        this.contatos[indexToEdit] = contato;
+        Util.escrever("Contato atualizado com sucesso.");
+    }
 
     // Remoção de contatos
     private void removerContato() throws Exception {
