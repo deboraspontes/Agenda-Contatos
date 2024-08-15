@@ -1,7 +1,6 @@
 package ada.tech.agenda.visao;
 
 import ada.tech.agenda.exception.ContatoNaoEncontradoException;
-import ada.tech.agenda.exception.EmailInvalidoException;
 import ada.tech.agenda.exception.NaoExisteContatoException;
 import ada.tech.agenda.exception.TelefoneExistenteException;
 import ada.tech.agenda.modelo.Contato;
@@ -18,18 +17,44 @@ public class Menu {
 
     public Menu() {
         this.entrada = new Scanner(System.in);
-        this.contatos = new Contato[100];
+        this.contatos = new Contato[0];
         this.nextId = 1;
         this.totalContatos = 0;
     }
 
     public void iniciar() {
 
+
         int opcao = 0;
+        String lista = "";
 
         do {
+            lista = "";
+            if (totalContatos > 0) {
+                    for (int i = 0; i < totalContatos; i++) {
+                        if (contatos[i] != null) {
+                            int id = contatos[i].getId();
+                            String nome = contatos[i].getNome().split(" ")[0];
+                            String sobrenome = contatos[i].getSobreNome();
+                            String telefone = contatos[i].getTelefone();
+                            String email = contatos[i].getEmail();
 
-            String lista = "";
+                    lista += String.format(
+                            """
+                            *___________________________________________________________________*
+                            | Id:         %s
+                            | Nome:       %s
+                            | Sobrenome:  %s
+                            | Telefone:   %s
+                            | E-mail:     %s
+                            *___________________________________________________________________*
+                            """, id, nome, sobrenome, telefone, email);
+                        }
+                }
+            } else {
+                lista = "Nenhum contato disponível.";
+            }
+
 
             String opcoes = """
 
@@ -39,7 +64,7 @@ public class Menu {
 
                     >>>> Contatos <<<<
                     %s
-
+                    
                     >>>> Menu <<<<
                     1 - Adicionar Contato
                     2 - Detalhar Contato
@@ -47,7 +72,7 @@ public class Menu {
                     4 - Remover Contato
                     5 - Sair
 
-                    """.formatted(lista.toString());
+                    """.formatted(lista);
 
             Util.escrever(opcoes);
             opcao = Integer.parseInt(Util.ler(entrada, "Digite a opcao:"));
@@ -55,10 +80,18 @@ public class Menu {
 
                 switch (opcao) {
                     case 1:
-                        adicionarContato();
+                        boolean isAddAnotherTrue = true;
+                        while (isAddAnotherTrue) {
+                            adicionarContato();
+                            String option = Util.ler(entrada, "Deseja adicionar outro contato? (S = Sim, N = Não): ");
+                            if (option.equalsIgnoreCase("n")) {
+                                isAddAnotherTrue = false;
+                            }
+                        }
                         break;
 
                     case 2:
+                        detalharContato();
                         break;
 
                     case 3:
@@ -76,16 +109,16 @@ public class Menu {
                         Util.erro("Opção inválida");
                         break;
                 }
-            } catch (TelefoneExistenteException | ContatoNaoEncontradoException | NaoExisteContatoException |
-                     EmailInvalidoException e) {
-                Util.erro("Erro: " + e.getMessage());
+            } catch (Exception e) {
+                Util.erro(STR."Erro: \{e.getMessage()}");
             }
 
         } while (opcao != 5);
     }
 
     // Adicionar contato
-    private void adicionarContato() throws TelefoneExistenteException, EmailInvalidoException {
+    public void adicionarContato() throws Exception {
+
         String telefone = Util.ler(entrada, "Digite o telefone: ");
         Util.contatoExiste(this.contatos, telefone);
 
@@ -96,26 +129,39 @@ public class Menu {
 
         String sobrenome = Util.ler(entrada, "Digite o sobrenome do contato: ");
         if (sobrenome.contains(" ")) {
-            sobrenome = sobrenome.split(" ")[0];
+            if(sobrenome.split(" ")[0].length() > 3){
+                sobrenome = sobrenome.split(" ")[0];
+            };
         }
 
         String email = Util.ler(entrada, "Digite o email: ");
-        if (!email.contains("@")) {
-            throw new EmailInvalidoException();
+        boolean isEmailValid = false;
+        while(!isEmailValid) {
+            if(email.contains("@")) {
+                isEmailValid = true;
+            } else{
+                 System.err.println("Formato de email inválido. Tente novamente!");
+                 email = Util.ler(entrada, "Digite novamente o email: ");
+            }
+        }
+
+        Contato[] contatosAtualizados = new Contato[contatos.length + 1];
+        for (int i = 0; i < contatos.length; i++) {
+            contatosAtualizados[i] = contatos[i];
         }
 
         Contato novoContato = new Contato(nextId, primeiroNome, sobrenome, telefone, email);
-        this.contatos[this.totalContatos++] = novoContato;
+        contatosAtualizados[contatos.length] = novoContato;
+        contatos = contatosAtualizados;
         nextId++;
-
+        totalContatos++;
         Util.escrever("Contato adicionado com sucesso!");
     }
 
     // Detalhar contato
 
 
-    private void detalharContato() throws ContatoNaoEncontradoException {
-        System.out.print("Digite o telefone do contato: ");
+    private void detalharContato() throws Exception {
         String telefone = Util.ler(entrada, "Digite o telefone do contato");
 
         Contato contato = null;
@@ -127,22 +173,21 @@ public class Menu {
             }
         }
         if (contato == null) {
-            Util.escrever("Nome:" + contato.getNome());
-            Util.escrever("Telefone" + contato.getTelefone());
-            Util.escrever("Email" + contato.getEmail());
+            Util.escrever(STR."Nome:\{contato.getNome()}");
+            Util.escrever(STR."Telefone\{contato.getTelefone()}");
+            Util.escrever(STR."Email\{contato.getEmail()}");
 
         } else {
-            throw new ContatoNaoEncontradoException("Contato não encontrado." + telefone);
+            throw new ContatoNaoEncontradoException();
         }
     }
 
 
     //Editar contato
-  
-    // Editar contato
+
 
     // Remoção de contatos
-    private void removerContato() throws NaoExisteContatoException {
+    private void removerContato() throws Exception {
         String telefone = Util.ler(entrada, "Digite o telefone do contato para remover: ");
         int indexToRemove = -1;
 

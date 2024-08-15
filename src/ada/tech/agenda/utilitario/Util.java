@@ -23,7 +23,7 @@ public class Util {
     public static void contatoExiste(Contato[] contatos, String telefone) throws TelefoneExistenteException {
         for (Contato contato : contatos) {
             if (contato != null && contato.getTelefone().equals(telefone)) {
-                throw new TelefoneExistenteException("O telefone já está cadastrado.");
+                throw new TelefoneExistenteException();
             }
         }
     }

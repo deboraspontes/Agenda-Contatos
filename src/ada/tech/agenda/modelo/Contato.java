@@ -2,7 +2,7 @@ package ada.tech.agenda.modelo;
 
 public class Contato {
 
-    private int id;
+    private final int id;
     private String nome;
     private String sobreNome;
     private String telefone;
@@ -23,11 +23,16 @@ public class Contato {
                 ############################
                 ##### DADOS DO CONTATO #####
                 ############################
-
-                Nome: %s %s
-                Telefone: %s
-                E-mail: %s
+                *___________________________________________________________________*
+                | Nome Completo: %s %s
+                | Telefone:      %s
+                | E-mail:        %s
+                *___________________________________________________________________*
                 """.formatted(nome, sobreNome, telefone, email);
+    }
+
+    public int getId(){
+        return id;
     }
 
     public String getNome() {
@@ -61,4 +66,5 @@ public class Contato {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }
