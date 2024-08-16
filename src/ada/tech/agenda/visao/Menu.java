@@ -1,6 +1,8 @@
 package ada.tech.agenda.visao;
 
-import ada.tech.agenda.operacoes.*;
+import ada.tech.agenda.exception.ContatoNaoEncontradoException;
+import ada.tech.agenda.exception.NaoExisteContatoException;
+import ada.tech.agenda.exception.TelefoneExistenteException;
 import ada.tech.agenda.modelo.Contato;
 import ada.tech.agenda.utilitario.Util;
 import java.util.Scanner;
@@ -20,6 +22,7 @@ public class Menu {
     }
 
     public void iniciar() {
+
 
         int opcao = 0;
         String lista = "";
@@ -72,34 +75,22 @@ public class Menu {
                     """.formatted(lista);
 
             Util.escrever(opcoes);
-            boolean entradaValida = false;
-            while (!entradaValida) {
-                try {
-                    opcao = Integer.parseInt(Util.ler(entrada, "Digite a opcao:"));
-
-                    if (opcao < 1 || opcao > 5) {
-                        Util.erro("Opção inválida! Selecione as opções entre 1 e 5.");
-                    } else {
-                        entradaValida = true;
-                    }
-                } catch (NumberFormatException e) {
-                    Util.erro("Entrada inválida! Por favor, insira um número (1-5).");
-                }
-            }
-
+            opcao = Integer.parseInt(Util.ler(entrada, "Digite a opcao:"));
             try {
+
                 switch (opcao) {
                     case 1:
-                        AdicionarContato adicionar = new AdicionarContato();
-                        contatos = adicionar.executar(contatos, entrada, nextId);
-                        nextId++;
-                        totalContatos++;
+                        boolean isAddAnotherTrue = true;
+                        while (isAddAnotherTrue) {
+                            adicionarContato();
+                            String option = Util.ler(entrada, "Deseja adicionar outro contato? (S = Sim, N = Não): ");
+                            if (option.equalsIgnoreCase("n")) {
+                                isAddAnotherTrue = false;
+                            }
+                        }
                         break;
 
                     case 2:
-
-                        DetalharContato detalhar = new DetalharContato();
-                        detalhar.executar(contatos, entrada);
                         boolean isDetalharOutroTrue = true;
                         while (isDetalharOutroTrue) {
                             detalharContato();
@@ -108,23 +99,18 @@ public class Menu {
                                 isDetalharOutroTrue = false;
                             }
                         }
-
                         break;
 
                     case 3:
-                        EditarContato editar = new EditarContato();
-                        editar.executar(contatos, entrada);
+                        editarContato();
                         break;
 
                     case 4:
-                        RemoverContato remover = new RemoverContato();
-                        contatos = remover.executar(contatos, entrada);
-                        totalContatos--;
+                        removerContato();
                         break;
 
                     case 5:
-                        Sair sair = new Sair();
-                        sair.executar();
+                        Util.escrever("Saindo...");
                         break;
 
                     default:
@@ -139,8 +125,6 @@ public class Menu {
     }
 
     // Adicionar contato
-
-
     public void adicionarContato() throws Exception {
 
         String telefone = Util.ler(entrada, "Digite o telefone: ");
@@ -175,9 +159,6 @@ public class Menu {
     }
 
 
-
-
-
     // Detalhar contato
 
 
@@ -194,12 +175,109 @@ public class Menu {
     }
 
 
-
     //Editar contato
+
+    private void editarContato() throws Exception {
+
+
+        String telefone = Util.ler(entrada, "Digite o telefone do contato que deseja editar: ");
+        Contato contato = null;
+        int indexToEdit = -1;
+
+
+        for (int i = 0; i < this.totalContatos; i++) {
+            if (contatos[i].getTelefone().equals(telefone)) {
+                contato = contatos[i];
+                indexToEdit = i;
+                break;
+            }
+        }
+
+
+        if (contato == null) {
+            throw new ContatoNaoEncontradoException();
+        }
+
+
+        String opcoesEdicao = """
+           >>>> Editar <<<<
+           1 - Nome
+           2 - Sobrenome
+           3 - Telefone
+           4 - Email
+           """;
+        Util.escrever(opcoesEdicao);
+        int opcao = Integer.parseInt(Util.ler(entrada, "Digite a opção que desejada para edição"));
+
+        switch (opcao) {
+            case 1:
+                String novoNome = Util.ler(entrada, "Digite o novo nome: ");
+                if (!novoNome.isBlank()) {
+                    contato.setNome(novoNome);
+                }
+                break;
+            case 2:
+                String novoSobrenome = Util.ler(entrada, "\nDigite o novo sobrenome: ");
+                if (!novoSobrenome.isBlank()) {
+                    contato.setSobreNome(novoSobrenome);
+                }
+                break;
+            case 3:
+                String novoTelefone = Util.ler(entrada, "\nDigite o novo telefone: ");
+                for (int i = 0; i < this.totalContatos; i++) {
+                    if (contatos[i].getTelefone().equals((novoTelefone))) {
+                        throw new TelefoneExistenteException();
+                    }
+                }
+                if (!novoTelefone.isBlank()) {
+                    contato.setTelefone(novoTelefone);
+                }
+                break;
+            case 4:
+                String novoEmail = Util.ler(entrada, "\nDigite o novo email: ");
+                if (!novoEmail.isBlank()) {
+                    contato.setEmail(novoEmail);
+                }
+                break;
+            default:
+                Util.erro("Opão inváloda");
+                break;
+
+
+        }
+
+        contatos[indexToEdit] = contato;
+        Util.escrever("Contato atualizado com sucesso.");
+    }
 
 
 
     // Remoção de contatos
+    private void removerContato() throws Exception {
+        String telefone = Util.ler(entrada, "Digite o telefone do contato para remover: ");
+        int indexToRemove = -1;
+
+        for (int i = 0; i < contatos.length; i++) {
+            if (contatos[i].getTelefone().equals(telefone)) {
+                indexToRemove = i;
+                break;
+            }
+        }
+
+        if (indexToRemove == -1) {
+            throw new NaoExisteContatoException();
+        }
+
+        Contato[] contatosAtualizados = new Contato[contatos.length - 1];
+        for (int i = 0, j = 0; i < contatos.length; i++) {
+            if (i == indexToRemove) {
+                continue;
+            }
+            contatosAtualizados[j++] = contatos[i];
+        }
+        contatos = contatosAtualizados;
+        Util.escrever("Contato removido!");
+    }
 
 }
 
