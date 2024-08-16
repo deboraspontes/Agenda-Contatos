@@ -111,7 +111,7 @@ public class Menu {
                         break;
                 }
             } catch (Exception e) {
-                Util.erro(STR."Erro: \{e.getMessage()}");
+                Util.erro("Erro: " + e.getMessage());
             }
 
         } while (opcao != 5);
@@ -121,7 +121,7 @@ public class Menu {
     public void adicionarContato() throws Exception {
 
         String telefone = Util.ler(entrada, "Digite o telefone: ");
-        Util.contatoExiste(this.contatos, telefone);
+        Util.contatoExiste(contatos, telefone);
 
         String primeiroNome = Util.ler(entrada, "Digite o nome do contato: ");
         if (primeiroNome.contains(" ")) {
@@ -159,6 +159,7 @@ public class Menu {
         Util.escrever("Contato adicionado com sucesso!");
     }
 
+
     // Detalhar contato
 
 
@@ -173,10 +174,10 @@ public class Menu {
                 break;
             }
         }
-        if (contato == null) {
-            Util.escrever(STR."Nome:\{contato.getNome()}");
-            Util.escrever(STR."Telefone\{contato.getTelefone()}");
-            Util.escrever(STR."Email\{contato.getEmail()}");
+        if (contato != null) {
+            Util.escrever("Nome: " + contato.getNome() + contato.getSobreNome());
+            Util.escrever("Telefone: " + contato.getTelefone());
+            Util.escrever("Email: " + contato.getEmail());
 
         } else {
             throw new ContatoNaoEncontradoException();
@@ -193,15 +194,15 @@ public class Menu {
         int indexToEdit = -1;
 
         for (int i = 0; i < this.totalContatos; i++) {
-            if (this.contatos[i].getTelefone().equals(telefone)) {
-                contato = this.contatos[i];
+            if (contatos[i].getTelefone().equals(telefone)) {
+                contato = contatos[i];
                 indexToEdit = i;
                 break;
             }
         }
 
         if (contato == null) {
-            throw new ContatoNaoEncontradoException("Contato com telefone " + telefone + " não encontrado.");
+            throw new ContatoNaoEncontradoException();
         }
 
         String novoNome = Util.ler(entrada, "Digite o novo nome: ");
@@ -213,14 +214,14 @@ public class Menu {
 
         if (!novoTelefone.isBlank() && !novoTelefone.equals(telefone)) {
             for (int i = 0; i < this.totalContatos; i++) {
-                if (this.contatos[i].getTelefone().equals(novoTelefone)) {
+                if (contatos[i].getTelefone().equals(novoTelefone)) {
                     throw new TelefoneExistenteException();
                 }
             }
             contato.setTelefone(novoTelefone);
         }
 
-        this.contatos[indexToEdit] = contato;
+        contatos[indexToEdit] = contato;
         Util.escrever("Contato atualizado com sucesso.");
     }
 
@@ -229,21 +230,37 @@ public class Menu {
         String telefone = Util.ler(entrada, "Digite o telefone do contato para remover: ");
         int indexToRemove = -1;
 
-        for (int i = 0; i < totalContatos; i++) {
-            if (contatos[i].getTelefone().equals(telefone)) {
+        for (int i = 0; i < contatos.length; i++) {
+            if(contatos[i].getTelefone().equals(telefone)) {
+                System.out.println("aqui" + contatos[i].getTelefone());
                 indexToRemove = i;
                 break;
+            } else {
+                throw new NaoExisteContatoException();
             }
         }
 
-        if (indexToRemove != -1) {
-            for (int i = indexToRemove; i < totalContatos - 1; i++) {
-                contatos[i] = contatos[i + 1];
+        Contato[] contatosAtualizados = new Contato[contatos.length - 1];
+        for (int i = 0, j = 0; i < contatos.length; i++) {
+                if (indexToRemove == i){
+                    continue;
+                };
+                contatosAtualizados[j++] = contatos[i];
+                contatos = contatosAtualizados;
             }
-            contatos[--totalContatos] = null;
+
             Util.escrever("Contato removido!");
-        } else {
-            throw new NaoExisteContatoException("Não existe contato com o telefone fornecido: " + telefone + ".");
         }
-    }
-}
+
+
+//        if (indexToRemove != -1) {
+//            for (int i = indexToRemove; i < totalContatos - 1; i++) {
+//                contatos[i] = contatos[i + 1];
+//            }
+//            contatos[totalContatos--] = null;
+//            for (int i = 0; i < contatos.length; i++){
+//                System.out.println(contatos[i].toString());
+//            }
+
+        }
+
