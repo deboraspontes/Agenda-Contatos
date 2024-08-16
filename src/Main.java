@@ -1,5 +1,4 @@
-import ada.tech.agenda.visao.Menu;
-import ada.tech.agenda.modelo.Contato;
+import ada.tech.agenda.controlador.Menu;
 
 public class Main {
 
