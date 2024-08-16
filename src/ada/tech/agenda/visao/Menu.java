@@ -30,8 +30,9 @@ public class Menu {
                     for (int i = 0; i < contatos.length; i++) {
                         if (contatos[i] != null) {
                             int id = contatos[i].getId();
-                            String nome = contatos[i].getNome().split(" ")[0];
-                            String sobrenome = contatos[i].getSobreNome();
+                            String primeiroNome = contatos[i].getNome().split(" ")[0];
+                            String[] sobrenomes = contatos[i].getSobreNome().split(" ");
+                            String ultimoSobrenome = sobrenomes[sobrenomes.length - 1];
                             String telefone = contatos[i].getTelefone();
                             String email = contatos[i].getEmail();
 
@@ -44,7 +45,7 @@ public class Menu {
                             | Telefone:   %s
                             | E-mail:     %s
                             *___________________________________________________________________*
-                            """, id, nome, sobrenome, telefone, email);
+                            """, id, primeiroNome, ultimoSobrenome, telefone, email);
                         }
                 }
             } else {
@@ -96,8 +97,18 @@ public class Menu {
                         break;
 
                     case 2:
+
                         DetalharContato detalhar = new DetalharContato();
                         detalhar.executar(contatos, entrada);
+                        boolean isDetalharOutroTrue = true;
+                        while (isDetalharOutroTrue) {
+                            detalharContato();
+                            String option = Util.ler(entrada, "Deseja detalhar outro contato? (S = Sim, N = Não): ");
+                            if (option.equalsIgnoreCase("n")) {
+                                isDetalharOutroTrue = false;
+                            }
+                        }
+
                         break;
 
                     case 3:
@@ -130,8 +141,58 @@ public class Menu {
     // Adicionar contato
 
 
+    public void adicionarContato() throws Exception {
+
+        String telefone = Util.ler(entrada, "Digite o telefone: ");
+        Util.contatoExiste(contatos, telefone);
+
+        String primeiroNome = Util.ler(entrada, "Digite o nome do contato: ");
+
+        String sobrenome = Util.ler(entrada, "Digite o sobrenome do contato: ");
+
+        String email = Util.ler(entrada, "Digite o email: ");
+        boolean isEmailValid = false;
+        while(!isEmailValid) {
+            if(email.contains("@")) {
+                isEmailValid = true;
+            } else{
+                 System.err.println("Formato de email inválido. Tente novamente!");
+                 email = Util.ler(entrada, "Digite novamente o email: ");
+            }
+        }
+
+        Contato[] contatosAtualizados = new Contato[contatos.length + 1];
+        for (int i = 0; i < contatos.length; i++) {
+            contatosAtualizados[i] = contatos[i];
+        }
+
+        Contato novoContato = new Contato(nextId, primeiroNome, sobrenome, telefone, email);
+        contatosAtualizados[contatos.length] = novoContato;
+        contatos = contatosAtualizados;
+        nextId++;
+        totalContatos++;
+        Util.escrever("Contato adicionado com sucesso!");
+    }
+
+
+
+
 
     // Detalhar contato
+
+
+    private void detalharContato() throws Exception {
+        String telefone = Util.ler(entrada, "Digite o telefone do contato");
+
+
+        for (int i=0; i<totalContatos; i++) {
+            if (contatos[i].getTelefone().equals(telefone)){
+                System.out.print(contatos[i]);
+                break;
+            }
+        }
+    }
+
 
 
     //Editar contato
