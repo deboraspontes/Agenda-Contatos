@@ -2,7 +2,7 @@ package ada.tech.agenda.modelo;
 
 public class Contato {
 
-    private final int id;
+    private int id;
     private String nome;
     private String sobreNome;
     private String telefone;
@@ -46,6 +46,8 @@ public class Contato {
     public String getSobreNome() {
         return sobreNome;
     }
+
+    public void setId(int id) { this.id = id; }
 
     public void setSobreNome(String sobreNome) {
         this.sobreNome = sobreNome;

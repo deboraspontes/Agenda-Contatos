@@ -259,6 +259,8 @@ public class Menu {
         Util.escrever("Contato atualizado com sucesso.");
     }
 
+
+
     // Remoção de contatos
     private void removerContato() throws Exception {
         String telefone = Util.ler(entrada, "Digite o telefone do contato para remover: ");
