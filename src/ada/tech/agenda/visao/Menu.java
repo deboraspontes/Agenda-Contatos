@@ -33,8 +33,9 @@ public class Menu {
                     for (int i = 0; i < contatos.length; i++) {
                         if (contatos[i] != null) {
                             int id = contatos[i].getId();
-                            String nome = contatos[i].getNome().split(" ")[0];
-                            String sobrenome = contatos[i].getSobreNome();
+                            String primeiroNome = contatos[i].getNome().split(" ")[0];
+                            String[] sobrenomes = contatos[i].getSobreNome().split(" ");
+                            String ultimoSobrenome = sobrenomes[sobrenomes.length - 1];
                             String telefone = contatos[i].getTelefone();
                             String email = contatos[i].getEmail();
 
@@ -47,7 +48,7 @@ public class Menu {
                             | Telefone:   %s
                             | E-mail:     %s
                             *___________________________________________________________________*
-                            """, id, nome, sobrenome, telefone, email);
+                            """, id, primeiroNome, ultimoSobrenome, telefone, email);
                         }
                 }
             } else {
@@ -90,7 +91,14 @@ public class Menu {
                         break;
 
                     case 2:
-                        detalharContato();
+                        boolean isDetalharOutroTrue = true;
+                        while (isDetalharOutroTrue) {
+                            detalharContato();
+                            String option = Util.ler(entrada, "Deseja detalhar outro contato? (S = Sim, N = Não): ");
+                            if (option.equalsIgnoreCase("n")) {
+                                isDetalharOutroTrue = false;
+                            }
+                        }
                         break;
 
                     case 3:
@@ -123,16 +131,8 @@ public class Menu {
         Util.contatoExiste(contatos, telefone);
 
         String primeiroNome = Util.ler(entrada, "Digite o nome do contato: ");
-        if (primeiroNome.contains(" ")) {
-            primeiroNome = primeiroNome.split(" ")[0];
-        }
 
         String sobrenome = Util.ler(entrada, "Digite o sobrenome do contato: ");
-        if (sobrenome.contains(" ")) {
-            if(sobrenome.split(" ")[0].length() > 3){
-                sobrenome = sobrenome.split(" ")[0];
-            };
-        }
 
         String email = Util.ler(entrada, "Digite o email: ");
         boolean isEmailValid = false;
@@ -165,7 +165,6 @@ public class Menu {
     private void detalharContato() throws Exception {
         String telefone = Util.ler(entrada, "Digite o telefone do contato");
 
-        Contato contato = null;
 
         for (int i=0; i<totalContatos; i++) {
             if (contatos[i].getTelefone().equals(telefone)){
