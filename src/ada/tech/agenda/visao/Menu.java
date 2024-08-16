@@ -179,9 +179,11 @@ public class Menu {
 
     private void editarContato() throws Exception {
 
+
         String telefone = Util.ler(entrada, "Digite o telefone do contato que deseja editar: ");
         Contato contato = null;
         int indexToEdit = -1;
+
 
         for (int i = 0; i < this.totalContatos; i++) {
             if (contatos[i].getTelefone().equals(telefone)) {
@@ -191,41 +193,64 @@ public class Menu {
             }
         }
 
+
         if (contato == null) {
             throw new ContatoNaoEncontradoException();
         }
 
-        String novoNome = Util.ler(entrada, "Digite o novo nome: ");
-        String novoSobrenome = Util.ler(entrada, "\nDigite o novo sobrenome: ");
-        String novoTelefone = Util.ler(entrada, "\nDigite o novo telefone: ");
-        String novoEmail = Util.ler(entrada, "\nDigite o novo email: ");
 
-        for (int i = 0; i < this.totalContatos; i++) {
-            if (contatos[i].getTelefone().equals((novoTelefone))) {
-                throw new TelefoneExistenteException();
-            }
-        }
+        String opcoesEdicao = """
+           >>>> Editar <<<<
+           1 - Nome
+           2 - Sobrenome
+           3 - Telefone
+           4 - Email
+           """;
+        Util.escrever(opcoesEdicao);
+        int opcao = Integer.parseInt(Util.ler(entrada, "Digite a opção que desejada para edição"));
 
-        if (!novoNome.isBlank()) {
-            contato.setNome(novoNome);
-        }
+        switch (opcao) {
+            case 1:
+                String novoNome = Util.ler(entrada, "Digite o novo nome: ");
+                if (!novoNome.isBlank()) {
+                    contato.setNome(novoNome);
+                }
+                break;
+            case 2:
+                String novoSobrenome = Util.ler(entrada, "\nDigite o novo sobrenome: ");
+                if (!novoSobrenome.isBlank()) {
+                    contato.setSobreNome(novoSobrenome);
+                }
+                break;
+            case 3:
+                String novoTelefone = Util.ler(entrada, "\nDigite o novo telefone: ");
+                for (int i = 0; i < this.totalContatos; i++) {
+                    if (contatos[i].getTelefone().equals((novoTelefone))) {
+                        throw new TelefoneExistenteException();
+                    }
+                }
+                if (!novoTelefone.isBlank()) {
+                    contato.setTelefone(novoTelefone);
+                }
+                break;
+            case 4:
+                String novoEmail = Util.ler(entrada, "\nDigite o novo email: ");
+                if (!novoEmail.isBlank()) {
+                    contato.setEmail(novoEmail);
+                }
+                break;
+            default:
+                Util.erro("Opão inváloda");
+                break;
 
-        if (!novoTelefone.isBlank()) {
 
-            contato.setTelefone(novoTelefone);
-        }
-
-        if (!novoSobrenome.isBlank()) {
-            contato.setSobreNome(novoSobrenome);
-        }
-
-        if (!novoEmail.isBlank()) {
-           contato.setEmail(novoEmail);
         }
 
         contatos[indexToEdit] = contato;
         Util.escrever("Contato atualizado com sucesso.");
     }
+
+
 
     // Remoção de contatos
     private void removerContato() throws Exception {
