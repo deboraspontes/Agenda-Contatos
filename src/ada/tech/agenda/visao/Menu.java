@@ -5,7 +5,6 @@ import ada.tech.agenda.exception.NaoExisteContatoException;
 import ada.tech.agenda.exception.TelefoneExistenteException;
 import ada.tech.agenda.modelo.Contato;
 import ada.tech.agenda.utilitario.Util;
-
 import java.util.Scanner;
 
 public class Menu {
@@ -30,8 +29,8 @@ public class Menu {
 
         do {
             lista = "";
-            if (totalContatos > 0) {
-                    for (int i = 0; i < totalContatos; i++) {
+            if (contatos.length > 0) {
+                    for (int i = 0; i < contatos.length; i++) {
                         if (contatos[i] != null) {
                             int id = contatos[i].getId();
                             String nome = contatos[i].getNome().split(" ")[0];
@@ -170,24 +169,16 @@ public class Menu {
 
         for (int i=0; i<totalContatos; i++) {
             if (contatos[i].getTelefone().equals(telefone)){
-                contato=contatos[i];
+                System.out.print(contatos[i]);
                 break;
             }
-        }
-        if (contato != null) {
-            Util.escrever("Nome: " + contato.getNome() + contato.getSobreNome());
-            Util.escrever("Telefone: " + contato.getTelefone());
-            Util.escrever("Email: " + contato.getEmail());
-
-        } else {
-            throw new ContatoNaoEncontradoException();
         }
     }
 
 
     //Editar contato
 
-    private void editarContato() throws ContatoNaoEncontradoException, TelefoneExistenteException {
+    private void editarContato() throws Exception {
 
         String telefone = Util.ler(entrada, "Digite o telefone do contato que deseja editar: ");
         Contato contato = null;
@@ -206,19 +197,31 @@ public class Menu {
         }
 
         String novoNome = Util.ler(entrada, "Digite o novo nome: ");
+        String novoSobrenome = Util.ler(entrada, "\nDigite o novo sobrenome: ");
         String novoTelefone = Util.ler(entrada, "\nDigite o novo telefone: ");
+        String novoEmail = Util.ler(entrada, "\nDigite o novo email: ");
+
+        for (int i = 0; i < this.totalContatos; i++) {
+            if (contatos[i].getTelefone().equals((novoTelefone))) {
+                throw new TelefoneExistenteException();
+            }
+        }
 
         if (!novoNome.isBlank()) {
             contato.setNome(novoNome);
         }
 
-        if (!novoTelefone.isBlank() && !novoTelefone.equals(telefone)) {
-            for (int i = 0; i < this.totalContatos; i++) {
-                if (contatos[i].getTelefone().equals(novoTelefone)) {
-                    throw new TelefoneExistenteException();
-                }
-            }
+        if (!novoTelefone.isBlank()) {
+
             contato.setTelefone(novoTelefone);
+        }
+
+        if (!novoSobrenome.isBlank()) {
+            contato.setSobreNome(novoSobrenome);
+        }
+
+        if (!novoEmail.isBlank()) {
+           contato.setEmail(novoEmail);
         }
 
         contatos[indexToEdit] = contato;
@@ -231,36 +234,26 @@ public class Menu {
         int indexToRemove = -1;
 
         for (int i = 0; i < contatos.length; i++) {
-            if(contatos[i].getTelefone().equals(telefone)) {
-                System.out.println("aqui" + contatos[i].getTelefone());
+            if (contatos[i].getTelefone().equals(telefone)) {
                 indexToRemove = i;
                 break;
-            } else {
-                throw new NaoExisteContatoException();
             }
+        }
+
+        if (indexToRemove == -1) {
+            throw new NaoExisteContatoException();
         }
 
         Contato[] contatosAtualizados = new Contato[contatos.length - 1];
         for (int i = 0, j = 0; i < contatos.length; i++) {
-                if (indexToRemove == i){
-                    continue;
-                };
-                contatosAtualizados[j++] = contatos[i];
-                contatos = contatosAtualizados;
+            if (i == indexToRemove) {
+                continue;
             }
-
-            Util.escrever("Contato removido!");
+            contatosAtualizados[j++] = contatos[i];
         }
+        contatos = contatosAtualizados;
+        Util.escrever("Contato removido!");
+    }
 
-
-//        if (indexToRemove != -1) {
-//            for (int i = indexToRemove; i < totalContatos - 1; i++) {
-//                contatos[i] = contatos[i + 1];
-//            }
-//            contatos[totalContatos--] = null;
-//            for (int i = 0; i < contatos.length; i++){
-//                System.out.println(contatos[i].toString());
-//            }
-
-        }
+}
 
