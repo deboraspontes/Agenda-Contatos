@@ -2,12 +2,14 @@ package ada.tech.agenda.modelo;
 
 public class Contato {
 
+    private int id;
     private String nome;
     private String sobreNome;
     private String telefone;
     private String email;
 
-    public Contato(String nome, String sobreNome, String telefone, String email) {
+    public Contato(int id, String nome, String sobreNome, String telefone, String email) {
+        this.id = id;
         this.nome = nome;
         this.sobreNome = sobreNome;
         this.telefone = telefone;
@@ -16,16 +18,21 @@ public class Contato {
 
     @Override
     public String toString() {
-        return STR."""
+        return """
 
                 ############################
                 ##### DADOS DO CONTATO #####
                 ############################
+                *___________________________________________________________________*
+                | Nome Completo: %s %s
+                | Telefone:      %s
+                | E-mail:        %s
+                *___________________________________________________________________*
+                """.formatted(nome, sobreNome, telefone, email);
+    }
 
-                Nome: \{nome} \{sobreNome}
-                Telefone: \{telefone}
-                E-mail: \{email}
-                """;
+    public int getId(){
+        return id;
     }
 
     public String getNome() {
@@ -39,6 +46,8 @@ public class Contato {
     public String getSobreNome() {
         return sobreNome;
     }
+
+    public void setId(int id) { this.id = id; }
 
     public void setSobreNome(String sobreNome) {
         this.sobreNome = sobreNome;
@@ -59,4 +68,5 @@ public class Contato {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }
