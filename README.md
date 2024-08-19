@@ -81,16 +81,13 @@ Id | Nome            | Telefone    | E-mail
 
 ## Reflexões sobre o projeto
 ### Quais foram os desafios no projeto?
-Trabalhar pela primeira vez em equipe em um projeto de programação,
-com divisão de tarefas, trabalhando todos no mesmo projeto com o desafio de desenvolver códigose posteriormente unir esses códigos para que se torne uma aplicação funcional.
-
+Trabalhar com arrays estáticos (Contato[]) para armazenar os contatos. Arrays em Java têm um tamanho fixo, o que complicou a adição e remoção de contatos, pois cada operação exigia a criação de um novo array e a cópia dos elementos existentes. A necessidade de manter IDs únicos e consistentes para cada contato, especialmente ao adicionar ou remover contatos. Criar uma interface de linha de comando que fosse intuitiva e amigável para o usuário final. Gerenciar o ciclo de vida do programa, garantindo que ele pudesse ser iniciado, executado e finalizado de maneira controlada, sem comportamentos inesperados.
 
 ### O que foi mais interessante?
 Ajudar e ser ajudado pelos membros da equipe, receber orientações específicas para o projeto do professor e usar habitualmente comandos do git para mesclar e sincronizar os códigos com todos os membros da equipe. Implementar exceções personalizadas aprimorando a robustez do sistema, garantindo uma abordagem mais controlada e específica para lidar com os erros. Projetar a interface de linha de comando para interação com o usuário, garantindo que seja intuitiva e responsiva, oferecendo uma visão sobre como tornar o software mais acessível e fácil de usar.
 
 
 ### O que pode ser melhorado?
-
 Substituir arrays por coleções dinâmicas (ArrayList), implementação de persistência de dados usando um banco de dados (SQL), garantidos que os contatos sejam salvos. Implementar testes unitários para garantir que as funcionalidades do sistema operem corretamente. E adicionar pesquisa de contatos por nome ou email, ao invés de ser somente por telefone.
 
 
