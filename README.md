@@ -86,21 +86,12 @@ com divisão de tarefas, trabalhando todos no mesmo projeto com o desafio de des
 
 
 ### O que foi mais interessante?
-Ajudar e ser ajudado pelos membros da equipe,  receber orientações
-específicas para o projeto do professor e usar habitualmente comandos do git
-para mesclar e sincronizar os códigos com todos os membros da equipe.
+Ajudar e ser ajudado pelos membros da equipe, receber orientações específicas para o projeto do professor e usar habitualmente comandos do git para mesclar e sincronizar os códigos com todos os membros da equipe. Implementar exceções personalizadas aprimorando a robustez do sistema, garantindo uma abordagem mais controlada e específica para lidar com os erros. Projetar a interface de linha de comando para interação com o usuário, garantindo que seja intuitiva e responsiva, oferecendo uma visão sobre como tornar o software mais acessível e fácil de usar.
 
 
 ### O que pode ser melhorado?
 
-
-Esse projeto foi uma experiência para aprendermos a trabalhar em equipe
-em um ambiente de programação e a desenvolver uma aplicação funcional
-colocando em prática diversos conhecimentos obtidos no módulo de lógica de
-programação. Então nosso conhecimento em programação e uma maior confiança
-e naturalidade para trabalhar em equipe utilizando o git podem ser
-incrementados nos próximos projetos do curso.
-
+Substituir arrays por coleções dinâmicas (ArrayList), implementação de persistência de dados usando um banco de dados (SQL), garantidos que os contatos sejam salvos. Implementar testes unitários para garantir que as funcionalidades do sistema operem corretamente. E adicionar pesquisa de contatos por nome ou email, ao invés de ser somente por telefone.
 
 
 
